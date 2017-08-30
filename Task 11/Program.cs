@@ -53,8 +53,44 @@ namespace Task_11
                 Console.WriteLine();
             }
 
-            Console.ReadLine();
 
-        }
+            string s = "";
+            k = 120; n = 10; m = 0;
+            do
+            {
+                i = m;
+                for (j = m; j <= n; j++)
+                {
+                    s = mas[i, j] + s;
+                    k--;
+                }
+                j = n;
+                for (i = m + 1; i <= n; i++)
+                {
+                    s = mas[i, j] + s;
+                    k--;
+                }
+                i = n;
+                for (j = n - 1; j >= m; j--)
+                {
+                    s = mas[i, j] + s;
+                    k--;
+                }
+                j = m;
+                for (i = n - 1; i > m; i--)
+                {
+                    s = mas[i, j] + s;
+                    k--;
+                }
+                n--; m++;
+            }
+            while (k > -1);
+
+            Console.WriteLine(s);
+
+
+
+            Console.ReadLine();
+                    }
     }
 }
