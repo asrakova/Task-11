@@ -8,89 +8,159 @@ namespace Task_11
 {
     class Program
     {
+        /// <summary>
+        /// Зашифровка текста
+        /// </summary>
+        /// <param name="str">Строка</param>
+        /// <returns>Зашифрованная строка</returns>
+        static string Coding(string str)
+        {
+            int row = 10, col = 0, iRow, jCol = 1;
+            int num = str.Length - 1;                     // Позиция текущего символа
+            char[,] mas = new char[row + 1, row + 1];     // Матрица для зашифровки
+            do
+            {
+                // Верхняя горизонталь
+                iRow = col;
+                for (jCol = col; jCol <= row; jCol++)
+                {
+                    mas[iRow, jCol] = str[num];
+                    num--;
+                }
+                // Правая вертикаль
+                jCol = row;
+                for (iRow = col + 1; iRow <= row; iRow++)
+                {
+                    mas[iRow, jCol] = str[num];
+                    num--;
+                }
+                // Нижняя горизонталь
+                iRow = row;
+                for (jCol = row - 1; jCol >= col; jCol--)
+                {
+                    mas[iRow, jCol] = str[num];
+                    num--;
+                }
+                // Левая вертикаль
+                jCol = col;
+                for (iRow = row - 1; iRow > col; iRow--)
+                {
+                    mas[iRow, jCol] = str[num];
+                    num--;
+                }
+                row--; col++;
+            }
+            while (num > -1);
+
+            // Соединение символов в строку
+            str = "";
+            for (iRow = 0; iRow < 11; iRow++)
+                for (jCol = 0; jCol < 11; jCol++)
+                    str += mas[iRow, jCol];
+            return str;
+        }
+
+        /// <summary>
+        /// Расшифровка текста
+        /// </summary>
+        /// <param name="str">Зашифрованная строка</param>
+        /// <returns>Расшифрованная строка</returns>
+        static string Decoding(string str)
+        {
+            int row = 10, col = 0;                      // Граничные строки и столбцы
+            int num = 0;                                // Позиция текущего символа
+            char[,] arr = new char[row + 1, row + 1];   // Матрица шифр
+
+            // Перевод шифра в матрицу
+            for (int i = 0; i <= row; i++)
+                for (int j = 0; j <= row; j++)
+                    arr[i, j] = str[num++];
+
+
+            str = "";
+            // Расшифровка текста по спирали в обратном порядке
+            int iRow, jCol;
+            do
+            {
+                // Горизонталь
+                iRow = col;
+                for (jCol = col; jCol <= row; jCol++)
+                {
+                    str = arr[iRow, jCol] + str;
+                    num--;
+                }
+                // Вертикаль
+                jCol = row;
+                for (iRow = col + 1; iRow <= row; iRow++)
+                {
+                    str = arr[iRow, jCol] + str;
+                    num--;
+                }
+                // Горизонталь
+                iRow = row;
+                for (jCol = row - 1; jCol >= col; jCol--)
+                {
+                    str = arr[iRow, jCol] + str;
+                    num--;
+                }
+                // Вертикаль
+                jCol = col;
+                for (iRow = row - 1; iRow > col; iRow--)
+                {
+                    str = arr[iRow, jCol] + str;
+                    num--;
+                }
+                row--; col++;
+            }
+            while (num > 0);
+            return str;
+        }
+
+
         static void Main(string[] args)
         {
+            // Ввод строки
             Console.WriteLine("Введите строку");
-            string str = Console.ReadLine();
-
-            int i, j = 1, n = 10, m = 0;
-            int k = str.Length - 1;
-            char [,] mas = new char [n + 1, n + 1];
+            string str = "";
             do
             {
-                i = m;
-                for (j = m; j <= n; j++)
-                {
-                    mas[i, j] = str[k];
-                    k --;
-                }
-                j = n;
-                for (i = m + 1; i <= n; i++)
-                {
-                    mas[i, j] = str[k];
-                    k--;
-                }
-                i = n;
-                for (j = n - 1; j >= m; j--)
-                {
-                    mas[i, j] = str[k];
-                    k--;
-                }
-                j = m;
-                for (i = n - 1; i > m; i--)
-                {
-                    mas[i, j] = str[k];
-                    k--;
-                }
-                n--; m++;
-            }
-            while (k > -1);
+                str = Console.ReadLine();
+                if (str.Length < 121) Console.WriteLine("Недостаточная длина текста. Повторите ввод.");
 
-            for (i = 0; i < 11; i++)
-            {
-                for (j = 0; j < 11; j++)
-                    Console.Write(mas[i, j] + " ");
-                Console.WriteLine();
-            }
+            } while (str.Length < 121);
+            if (str.Length > 121) str = str.Substring(0, 121);
 
-
-            string s = "";
-            k = 120; n = 10; m = 0;
+            // Меню
+            string input = "";
             do
             {
-                i = m;
-                for (j = m; j <= n; j++)
+                Console.WriteLine(@"Меню:
+0. Выход
+1. Зашифровать текст
+2. Расшифровать текст");
+                input = Console.ReadLine();
+                switch (input)
                 {
-                    s = mas[i, j] + s;
-                    k--;
+                    // Зашифровка
+                    case ("1"):
+                        str = Coding(str);
+                        Console.WriteLine("Результат:");
+                        Console.WriteLine(str);
+                        break;
+                    // Расшифровка
+                    case ("2"):
+                        str = Decoding(str);
+                        Console.WriteLine("Результат:");
+                        Console.WriteLine(str);
+                        break;
+                    case ("0"):
+                        break;
+                    default:
+                        Console.WriteLine("Выбранного пункта не существует");
+                        break;
                 }
-                j = n;
-                for (i = m + 1; i <= n; i++)
-                {
-                    s = mas[i, j] + s;
-                    k--;
-                }
-                i = n;
-                for (j = n - 1; j >= m; j--)
-                {
-                    s = mas[i, j] + s;
-                    k--;
-                }
-                j = m;
-                for (i = n - 1; i > m; i--)
-                {
-                    s = mas[i, j] + s;
-                    k--;
-                }
-                n--; m++;
             }
-            while (k > -1);
-
-            Console.WriteLine(s);
-
-
-
-            Console.ReadLine();
-                    }
+            while (input != "0");
+        }
     }
 }
